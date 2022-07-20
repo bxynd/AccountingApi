@@ -1,2 +1,1 @@
 # AccountingApi
-# AccountingApi
