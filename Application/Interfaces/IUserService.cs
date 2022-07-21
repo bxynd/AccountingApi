@@ -10,4 +10,7 @@ public interface IUserService
     Task<List<User>> GetAllUsers();
     Task<User> GetUserById(Guid id);
     Task<Guid> DeleteUser(Guid id);
+    Task<User?> GetByEmail(string email);
+
+    
 }

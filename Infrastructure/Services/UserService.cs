@@ -2,14 +2,15 @@
 using Application.Interfaces;
 using Domain.Models;
 using Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Infrastructure.Services;
 
 public class UserService : IUserService
 {
-    private readonly IGenericRepository<User> _userRepository;
+    private readonly IUserRepository _userRepository;
 
-    public UserService(IGenericRepository<User> userRepository)
+    public UserService(IUserRepository userRepository)
     {
         _userRepository = userRepository;
     }
@@ -18,6 +19,7 @@ public class UserService : IUserService
         var user = new User
         {
             Email = userDto.Email,
+            Role = userDto.Role,
             Password = userDto.Password
         };
         await _userRepository.Create(user);
@@ -27,6 +29,7 @@ public class UserService : IUserService
     {
         var user = await _userRepository.ReadById(id);
         user.Email = userDto.Email;
+        user.Role = userDto.Role;
         user.Password = userDto.Password;
         await _userRepository.Update(user);
         return user;
@@ -35,7 +38,6 @@ public class UserService : IUserService
     {
         return await _userRepository.ReadAll();
     }
-
     public async Task<User> GetUserById(Guid id)
     {
         return await _userRepository.ReadById(id);
@@ -44,5 +46,10 @@ public class UserService : IUserService
     {
         await _userRepository.Delete(id);
         return id;
+    }
+
+    public async Task<User?> GetByEmail(string email)
+    {
+        return await _userRepository.FindByEmail(email);
     }
 }

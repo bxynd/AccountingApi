@@ -2,9 +2,9 @@
 
 public interface IGenericRepository<T> where T : class
 {
-    Task<int> Create(T entity);
-    Task<List<T>> ReadAll();
-    Task<T> ReadById(Guid Id);
-    Task<int> Update(T entity);
-    Task<int> Delete(Guid Id);
+    public Task<int> Create(T entity);
+    public Task<List<T>> ReadAll();
+    public Task<T> ReadById(Guid Id);
+    public Task<int> Update(T entity);
+    public Task<int> Delete(Guid Id);
 }

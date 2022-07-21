@@ -1,10 +1,12 @@
 ﻿using Application.Dto;
 using Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AccountingApi.Controllers;
+namespace AccountingApp.Controllers;
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class RecordController : ControllerBase
 {
     private readonly IRecordService _recordService;
@@ -14,12 +16,14 @@ public class RecordController : ControllerBase
         _recordService = recordService;
     }
     [HttpGet]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetAll()
     {
         return Ok(await _recordService.GetAllRecords());
     }
     
     [HttpPost]
+    [Authorize(Roles = "Admin,Regular")]
     public async Task<IActionResult> CreateRecord([FromBody]RecordDto record)
     {
         if (!ModelState.IsValid)
@@ -37,6 +41,7 @@ public class RecordController : ControllerBase
         }
     }
     
+    [Authorize(Roles = "Admin,Regular")]
     [HttpGet("ByRecordId/{id:Guid}")]
     public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
@@ -44,6 +49,7 @@ public class RecordController : ControllerBase
     }
     
     [HttpPut("{id:Guid}")]
+    [Authorize(Roles = "Admin,Regular")]
     public async Task<IActionResult> Update([FromRoute] Guid id,[FromBody] RecordDto record)
     {
         if (!ModelState.IsValid)
@@ -62,6 +68,7 @@ public class RecordController : ControllerBase
     }
 
     [HttpDelete("{id:Guid}")]
+    [Authorize(Roles = "Admin,Regular")]
     public async Task<IActionResult> Delete([FromRoute] Guid id)
     {
         return Ok(await _recordService.DeleteRecord(id));
